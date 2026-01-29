@@ -115,7 +115,7 @@ def get_valid_amount(prompt):
             if amount < 0:
                 print("Error: Amount cannot be negative. Please try again.")
                 continue
-            return amount
+            return amount  # Zero allowed here for initial balance; deposit/withdraw handle their own validation
         except ValueError:
             print("Error: Invalid input. Please enter a valid number.")
 

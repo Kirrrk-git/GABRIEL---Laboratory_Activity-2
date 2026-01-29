@@ -141,8 +141,8 @@ PROPOSED IMPROVEMENT USING ADDITIONAL OOP CONCEPTS:
 2. COMPOSITION - Add a Transaction class to track history:
    
    class Transaction:
-       def __init__(self, trans_type, amount, timestamp):
-           self.trans_type = trans_type
+       def __init__(self, transaction_type, amount, timestamp):
+           self.transaction_type = transaction_type
            self.amount = amount
            self.timestamp = timestamp
    
