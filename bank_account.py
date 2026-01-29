@@ -22,6 +22,8 @@ class BankAccount:
 
         if amount <= 0:
             raise ValueError("Withdrawal amount must be positive.")
+        if amount != int(amount):
+            raise ValueError("Withdrawal amount must be a whole number. ATMs only dispense bills.")
         if amount > self.balance:
             raise ValueError(f"Insufficient funds. Available balance: ₱{self.balance:.2f}")
         
@@ -80,8 +82,8 @@ def main():
             account_number = input("Enter account number: ").strip()
             if not account_number:
                 raise ValueError("Account number cannot be empty.")
-            if not account_number.isalnum():
-                raise ValueError("Account number should only contain letters and numbers.")
+            if not account_number.isdigit():
+                raise ValueError("Account number should only contain numbers.")
             break
         except ValueError as e:
             print(f"Error: {e} Please try again.")
