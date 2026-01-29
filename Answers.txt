@@ -1,0 +1,183 @@
+================================================================================
+                    LABORATORY ACTIVITY 2
+                    Bank Account Management System
+================================================================================
+
+================================================================================
+QUESTION 1: Overall Design and Class Structure Justification
+================================================================================
+
+The program implements a Bank Account Management System using Object-Oriented 
+Programming (OOP) principles. The core of the design is the BankAccount class, 
+which encapsulates all the data and behaviors related to a bank account.
+
+CLASS STRUCTURE:
+----------------
+The BankAccount class contains:
+
+User-Defined Attributes:
+- account_holder (str): Stores the name of the account owner
+- account_number (str): Stores the unique identifier for the account
+- balance (float): Stores the current monetary balance
+
+User-Defined Methods:
+1. __init__(): Constructor that initializes the account with holder name, 
+   account number, and optional initial balance
+2. deposit(amount): Adds money to the account balance
+3. withdraw(amount): Removes money from the account balance
+4. get_balance(): Returns the current balance (getter method)
+5. display_account_info(): Displays formatted account details
+
+DESIGN JUSTIFICATION:
+--------------------
+I chose this class structure for the following reasons:
+
+1. ENCAPSULATION: The BankAccount class bundles related data (account details) 
+   with operations (deposit, withdraw) that work on that data. This is a 
+   fundamental OOP principle that improves code organization and maintainability.
+
+2. REAL-WORLD MODELING: A bank account is a perfect example of an object with 
+   clear attributes (holder name, number, balance) and behaviors (deposit, 
+   withdraw, check balance). This makes the code intuitive and easy to understand.
+
+3. SEPARATION OF CONCERNS: The class handles only account-related operations, 
+   while the main() function handles user interaction and program flow. This 
+   makes the code modular and easier to test and maintain.
+
+4. REUSABILITY: The BankAccount class can be easily reused in other programs 
+   or extended to create specialized account types (savings, checking, etc.) 
+   through inheritance.
+
+
+================================================================================
+QUESTION 2: User Input Handling and Exception Handling Role
+================================================================================
+
+USER INPUT HANDLING:
+-------------------
+The program accepts user input at multiple points:
+
+1. Account Creation:
+   - Account holder name (validated for non-empty, letters/spaces only)
+   - Account number (validated for non-empty, alphanumeric only)
+   - Initial balance (validated for numeric, non-negative)
+
+2. Menu Operations:
+   - Menu choice (1-5)
+   - Deposit/withdrawal amounts
+
+The get_valid_amount() helper function provides reusable input validation 
+for monetary amounts, ensuring users enter valid positive numbers.
+
+ROLE OF EXCEPTION HANDLING (try-except):
+----------------------------------------
+Exception handling plays a crucial role in making the program robust and 
+user-friendly:
+
+1. INPUT VALIDATION (ValueError):
+   - The program uses try-except blocks to catch ValueError when users enter 
+     non-numeric data for amounts
+   - Example: If a user types "abc" instead of a number, the program catches 
+     the exception and prompts the user to try again instead of crashing
+
+2. BUSINESS LOGIC VALIDATION:
+   - The deposit() method raises ValueError if amount <= 0
+   - The withdraw() method raises ValueError if amount <= 0 or exceeds balance
+   - These exceptions are caught in main() and display user-friendly messages
+
+3. GRACEFUL EXIT (KeyboardInterrupt):
+   - The program catches KeyboardInterrupt (Ctrl+C) to allow graceful exit
+   - Instead of showing a traceback, it displays a friendly goodbye message
+
+4. CATCH-ALL PROTECTION (Exception):
+   - A general exception handler catches any unexpected errors
+   - This prevents the program from crashing unexpectedly and informs the user
+
+BENEFITS OF EXCEPTION HANDLING:
+------------------------------
+- Prevents program crashes from invalid input
+- Provides clear, user-friendly error messages
+- Maintains program flow despite errors
+- Separates error handling logic from business logic
+- Makes the program more robust and professional
+
+
+================================================================================
+QUESTION 3: Limitation and Potential Improvement
+================================================================================
+
+CURRENT LIMITATION:
+------------------
+One significant limitation of the current implementation is the LACK OF DATA 
+PERSISTENCE. When the program exits, all account data is lost. The account 
+holder, account number, and balance are only stored in memory during runtime.
+
+This means:
+- Users cannot save their account for future sessions
+- Multiple accounts cannot be managed simultaneously
+- Transaction history is not recorded
+- The system cannot serve as a practical banking solution
+
+PROPOSED IMPROVEMENT USING ADDITIONAL OOP CONCEPTS:
+--------------------------------------------------
+
+1. INHERITANCE - Create specialized account classes:
+   
+   class SavingsAccount(BankAccount):
+       def __init__(self, holder, number, balance, interest_rate):
+           super().__init__(holder, number, balance)
+           self.interest_rate = interest_rate
+       
+       def apply_interest(self):
+           interest = self.balance * self.interest_rate
+           self.deposit(interest)
+   
+   class CheckingAccount(BankAccount):
+       def __init__(self, holder, number, balance, overdraft_limit):
+           super().__init__(holder, number, balance)
+           self.overdraft_limit = overdraft_limit
+
+2. COMPOSITION - Add a Transaction class to track history:
+   
+   class Transaction:
+       def __init__(self, transaction_type, amount, timestamp):
+           self.transaction_type = transaction_type
+           self.amount = amount
+           self.timestamp = timestamp
+   
+   # BankAccount would contain a list of Transaction objects
+
+3. FILE/DATABASE PERSISTENCE - Add save/load methods:
+   
+   def save_to_file(self, filename):
+       import json
+       data = {
+           'holder': self.account_holder,
+           'number': self.account_number,
+           'balance': self.balance
+       }
+       with open(filename, 'w') as f:
+           json.dump(data, f)
+   
+   @classmethod
+   def load_from_file(cls, filename):
+       import json
+       with open(filename, 'r') as f:
+           data = json.load(f)
+       return cls(data['holder'], data['number'], data['balance'])
+
+4. BETTER ERROR HANDLING - Create custom exception classes:
+   
+   class InsufficientFundsError(Exception):
+       """Raised when withdrawal exceeds available balance"""
+       pass
+   
+   class InvalidAmountError(Exception):
+       """Raised when amount is not valid"""
+       pass
+
+These improvements would make the program more practical, maintainable, and 
+demonstrate more advanced OOP concepts while providing better error handling 
+with custom exceptions that are more descriptive and easier to handle 
+specifically.
+
